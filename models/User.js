@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const userSchema = Schema(
   {
     email: { type: String, required: true, unique: true },
-    password: { trype: String, required: true },
+    password: { type: String, required: true },
     name: { type: String, required: true },
     level: { type: String, default: "customer" }, // 2types : customer, admin
   },
@@ -19,5 +19,5 @@ userSchema.methods.toJSON = function () {
   return obj;
 };
 
-const User = mongoose.modelNames("User", userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;
