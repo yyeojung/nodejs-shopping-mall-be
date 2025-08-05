@@ -9,7 +9,7 @@ const productSchema = Schema(
     category: { type: Array, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    stock: { type: Object, required: true },
+    stock: { type: Array, required: true },
     status: { type: String, default: "active" },
     isDelete: { type: Boolean, default: false },
   },
