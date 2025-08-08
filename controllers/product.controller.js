@@ -31,6 +31,12 @@ productController.createProduct = async (req, res) => {
     await product.save();
     res.status(200).json({ status: "success", product });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        status: "fail",
+        error: "SKU가 중복되었습니다. 다른 값을 사용해주세요.",
+      });
+    }
     res.status(400).json({ status: "fail", error: error.message });
   }
 };
