@@ -44,7 +44,9 @@ productController.createProduct = async (req, res) => {
 productController.getProduct = async (req, res) => {
   try {
     const { page, name, pageSize } = req.query;
-    const cond = name ? { name: { $regex: new RegExp(name, "i") } } : {};
+    const cond = name
+      ? { name: { $regex: new RegExp(name, "i") } }
+      : { isDeleted: false };
 
     let query = Product.find(cond);
     let response = { status: "success" };
@@ -107,4 +109,19 @@ productController.updateProduct = async (req, res) => {
     res.status(400).json({ status: "fail", message: error.message });
   }
 };
+
+productController.deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findByIdAndUpdate(
+      { _id: productId },
+      { idDeleted: true }
+    );
+    if (!product) throw new Error("no item found");
+    res.status(200).json({ status: "ok", data: deleteProduct });
+  } catch (error) {
+    res.status(400).json({ status: "fail", error: error.message });
+  }
+};
+
 module.exports = productController;
