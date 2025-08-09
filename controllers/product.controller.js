@@ -16,6 +16,7 @@ productController.createProduct = async (req, res) => {
       price,
       stock,
       status,
+      isDeleted,
     } = req.body;
     const product = new Product({
       sku,
@@ -27,6 +28,7 @@ productController.createProduct = async (req, res) => {
       price,
       stock,
       status,
+      isDeleted,
     });
     await product.save();
     res.status(200).json({ status: "success", product });
@@ -45,7 +47,7 @@ productController.getProduct = async (req, res) => {
   try {
     const { page, name, pageSize } = req.query;
     const cond = name
-      ? { name: { $regex: new RegExp(name, "i") } }
+      ? { name: { $regex: new RegExp(name, "i") }, isDeleted: false }
       : { isDeleted: false };
 
     let query = Product.find(cond);
