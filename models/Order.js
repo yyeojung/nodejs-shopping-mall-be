@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./User");
+const Cart = require("./Cart");
 const Product = require("./Product");
 const Schema = mongoose.Schema;
 
@@ -29,6 +30,12 @@ orderSchema.methods.toJSON = function () {
   delete obj.__createAt;
   return obj;
 };
+orderSchema.post("save", async function () {
+  // 카트 비워주기
+  const cart = await Cart.findOne({ userId: this.userId });
+  cart.items = [];
+  await cart.save();
+});
 
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;
