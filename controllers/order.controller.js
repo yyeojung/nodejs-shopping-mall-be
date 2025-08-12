@@ -38,4 +38,23 @@ orderController.createOrder = async (req, res) => {
   }
 };
 
+orderController.getOrder = async (req, res) => {
+  try {
+    const { userId } = req;
+    const orderList = await Order.find({ userId }).populate({
+      path: "items",
+      populate: {
+        path: "productId",
+        model: "Product",
+        select: "image name",
+      },
+    });
+    // const totalItemNum = await Order.find({ userId }).count();
+
+    // const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
+    res.status(200).json({ status: "success", data: orderList });
+  } catch (error) {
+    return res.status(400).json({ status: "fail", error: error.message });
+  }
+};
 module.exports = orderController;
