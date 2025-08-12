@@ -82,7 +82,7 @@ cartController.editCartItem = async (req, res) => {
     if (index === -1) throw new Error("아이템을 찾을 수 없습니다.");
     cart.items[index].qty = qty;
     await cart.save();
-    res.status(200).json({ status: 200, data: cart.items });
+    res.status(200).json({ status: "success", data: cart.items });
   } catch (error) {
     return res.status(400).json({ status: "fail", error: error.message });
   }
