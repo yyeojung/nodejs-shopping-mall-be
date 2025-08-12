@@ -2,6 +2,7 @@ const orderController = {};
 const Order = require("../models/Order");
 const randomStringGenerator = require("../utils/randomStringGenerator");
 const productController = require("./product.controller");
+const PAGE_SIZE = 10;
 
 orderController.createOrder = async (req, res) => {
   try {
@@ -32,6 +33,8 @@ orderController.createOrder = async (req, res) => {
     });
 
     await newOrder.save();
+    // save 후에 카트를 비워주자
+
     res.status(200).json({ status: "success", orderNum: newOrder.orderNum });
   } catch (error) {
     return res.status(400).json({ status: "fail", error: error.message });
@@ -84,4 +87,22 @@ orderController.getOrderList = async (req, res) => {
     return res.status(400).json({ status: "fail", error: error.message });
   }
 };
+
+orderController.updateOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const order = await Order.findByIdAndUpdate(
+      id,
+      { status: status },
+      { new: true }
+    );
+    if (!order) throw new Error("주문을 찾을 수 없습니다.");
+
+    res.status(200).json({ status: "success", data: order });
+  } catch (error) {
+    return res.status(400).json({ status: "fail", error: error.message });
+  }
+};
+
 module.exports = orderController;
