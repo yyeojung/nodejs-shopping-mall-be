@@ -22,6 +22,10 @@ orderController.createOrder = async (req, res) => {
       );
       throw new Error(errorMessage);
     }
+    //재고 차감 (모든 상품 통과 시에만 실행)
+    await Promise.all(
+      orderList.map((item) => productController.deductStock(item))
+    );
     // order 만들기
     const newOrder = new Order({
       userId,
